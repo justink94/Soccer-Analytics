@@ -1,0 +1,10 @@
+import pandas as pd
+from pathlib import Path
+import json
+import numpy as np
+
+jsonpath = Path('/Users/justinkleindienst/Downloads/teams.json')
+with jsonpath.open('r', encoding='utf-8') as dat_f:
+    dat = json.loads(dat_f.read())
+    
+    
