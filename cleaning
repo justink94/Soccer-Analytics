@@ -3,12 +3,17 @@ from pathlib import Path
 import json
 import numpy as np
 
-##jsonpath = Path('/Users/justinkleindienst/Downloads/teams.json')
+jsonpath = Path(' ') ##Insert path to which ever country event json you want to start with 
 with jsonpath.open('r', encoding='utf-8') as dat_f:
     dat = json.loads(dat_f.read())
     
 df = pd.json_normalize(dat)
-df.to_csv('teams.csv', encoding='utf-8', index=False)
+df.to_csv(' ', encoding='utf-8', index=False) ##insert name for csv
+
+------------------------------------------------------------------------------------------------------------------------
+
+##Insert path to the csv you created above
+##Function to create variables for goal scoring positions on the field
 
 def goal_pos_func(path):
     country = pd.read_csv(path)
@@ -35,7 +40,10 @@ def goal_pos_func(path):
     pd.set_option('display.max_colwidth', None)
     country_shots = country_shots[['tags', 'playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','goal']]
     return country_shots
-    
+
+##Insert path you created for the csv again
+##Function to create frame containing shots, whether they were assisted, and the postion on the assisting passer
+
 def assist_pos_func(path):
     country = pd.read_csv(path)
     country_pass = country[country.eventName == 'Pass']
@@ -62,6 +70,9 @@ def assist_pos_func(path):
     country_shots = country_shots[['tags', 'playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','assist']]
     return country_shots
     
+##Insert path to the csv saved from the goal_pos function
+##Function to create variables based on what body part was shot with (head/body, left foot, right foot)
+    
 def body_func(path):
     country_shots = pd.read_csv(path)
     tags = country_shots.tags
@@ -81,7 +92,12 @@ def body_func(path):
     country_shots = pd.concat([country_shots, left], axis=1)
     country_shots = pd.concat([country_shots, head], axis=1)
     return country_shots
-    
+
+
+##path 1 should be the path to thecsv created from json you made first
+##path2 should be the path to thecsv created with body_func
+##Function returns frame containing shot position, assist position, whether a goal was scored, and the body part shot with
+
 def full_shots(path1, path2):
     country = pd.read_csv(path1)
     passes_shots = country.loc[((country['eventName'] == 'Pass') | (country['eventName'] == 'Shot'))]
