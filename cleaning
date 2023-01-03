@@ -3,8 +3,128 @@ from pathlib import Path
 import json
 import numpy as np
 
-jsonpath = Path('/Users/justinkleindienst/Downloads/teams.json')
+##jsonpath = Path('/Users/justinkleindienst/Downloads/teams.json')
 with jsonpath.open('r', encoding='utf-8') as dat_f:
     dat = json.loads(dat_f.read())
     
+df = pd.json_normalize(dat)
+df.to_csv('teams.csv', encoding='utf-8', index=False)
+
+def goal_pos_func(path):
+    country = pd.read_csv(path)
+    country_shots = country[country.eventName == 'Shot']
+    country_tags = country_shots.tags
+    country_result = country_tags.str.extract(pat = r"({'id': 101})")
+    country_result = country_result.fillna(0)
+    country_result.rename(columns={country_result.columns[0]:'goal'}, inplace=True)
+    country_result["goal"].replace({"{'id': 101}": '1'}, inplace=True)
+    country_shots = pd.concat([country_shots, country_result], axis=1)
+    country_positions = country_shots['positions'].str.split(',', n=2, expand=True)
+    country_positions = country_shots['positions'].str.split(':', n=4, expand=True)
+    country_positions = country_shots['positions'].str.split(' ', n=4, expand=True)
+    country_positions.drop(country_positions.columns[[0,2,4]], axis = 1, inplace = True)
+    country_positions.rename(columns={country_positions.columns[0]:'y start'}, inplace=True)
+    country_positions.rename(columns={country_positions.columns[1]:'x start'}, inplace=True)
+    country_positions['y start'] = country_positions["y start"].str.replace(r',',' ',)
+    country_positions['x start'] = country_positions["x start"].str.replace(r',', ' ')
+    country_positions['x start'] = country_positions["x start"].str.replace(r'}', ' ')
+    country_positions['y start'] = country_positions['y start'].astype(int)
+    country_positions['x start'] = country_positions['x start'].astype(int)
+    country_shots = pd.concat([country_shots, country_positions], axis=1)
+    country_shots = country_shots.drop(['positions', 'subEventId', 'subEventName', 'eventId'], axis = 1)
+    pd.set_option('display.max_colwidth', None)
+    country_shots = country_shots[['tags', 'playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','goal']]
+    return country_shots
     
+def assist_pos_func(path):
+    country = pd.read_csv(path)
+    country_pass = country[country.eventName == 'Pass']
+    country_tags = country_pass.tags
+    country_result = country_tags.str.extract(pat = r"({'id': 301})")
+    country_result = country_result.fillna(0)
+    country_result.rename(columns={country_result.columns[0]:'assist'}, inplace=True)
+    country_result["assist"].replace({"{'id': 301}": '1'}, inplace=True)
+    country_pass = pd.concat([country_pass, country_result], axis=1)
+    country_positions = country_pass['positions'].str.split(',', n=2, expand=True)
+    country_positions = country_pass['positions'].str.split(':', n=4, expand=True)
+    country_positions = country_pass['positions'].str.split(' ', n=4, expand=True)
+    country_positions.drop(country_positions.columns[[0,2,4]], axis = 1, inplace = True)
+    country_positions.rename(columns={country_positions.columns[0]:'y start'}, inplace=True)
+    country_positions.rename(columns={country_positions.columns[1]:'x start'}, inplace=True)
+    country_positions['y start'] = country_positions["y start"].str.replace(r',',' ',)
+    country_positions['x start'] = country_positions["x start"].str.replace(r',', ' ')
+    country_positions['x start'] = country_positions["x start"].str.replace(r'}', ' ')
+    country_positions['y start'] = country_positions['y start'].astype(int)
+    country_positions['x start'] = country_positions['x start'].astype(int)
+    country_shots = pd.concat([country_pass, country_positions], axis=1)
+    country_shots = country_shots.drop(['positions', 'subEventId', 'subEventName', 'eventId'], axis = 1)
+    pd.set_option('display.max_colwidth', None)
+    country_shots = country_shots[['tags', 'playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','assist']]
+    return country_shots
+    
+def body_func(path):
+    country_shots = pd.read_csv(path)
+    tags = country_shots.tags
+    left = tags.str.extract(pat = r"({'id': 401})")
+    left =left.fillna(0)
+    left.rename(columns={left.columns[0]:"left foot"}, inplace=True)
+    left["left foot"].replace({"{'id': 401}": '1'}, inplace=True)
+    right = tags.str.extract(pat = r"({'id': 402})")
+    right =right.fillna(0)
+    right.rename(columns={right.columns[0]:'right foot'}, inplace=True)
+    right["right foot"].replace({"{'id': 402}": '1'}, inplace=True)
+    head = tags.str.extract(pat = r"({'id': 403})")
+    head =head.fillna(0)
+    head.rename(columns={head.columns[0]:'head/body'}, inplace=True)
+    head["head/body"].replace({"{'id': 403}": '1'}, inplace=True)
+    country_shots = pd.concat([country_shots, right], axis=1)
+    country_shots = pd.concat([country_shots, left], axis=1)
+    country_shots = pd.concat([country_shots, head], axis=1)
+    return country_shots
+    
+def full_shots(path1, path2):
+    country = pd.read_csv(path1)
+    passes_shots = country.loc[((country['eventName'] == 'Pass') | (country['eventName'] == 'Shot'))]
+    tags = passes_shots.tags
+    goal = tags.str.extract(pat = r"({'id': 101})")
+    goal = goal.fillna(0)
+    goal.rename(columns={goal.columns[0]:'goal'}, inplace=True)
+    goal["goal"].replace({"{'id': 101}": '1'}, inplace=True)
+    country_passes_shots = pd.concat([passes_shots, goal], axis=1)
+    assist = tags.str.extract(pat = r"({'id': 301})")
+    assist = assist.fillna(0)
+    assist.rename(columns={assist.columns[0]:'assist'}, inplace=True)
+    assist["assist"].replace({"{'id': 301}": '1'}, inplace=True)
+    country_passes_shots = pd.concat([country_passes_shots, assist], axis=1)
+    country_goals_assists = country_passes_shots.loc[((country_passes_shots['goal'] == '1') | (country_passes_shots['assist'] == '1'))]
+    country_goals_assists['assisted goals'] = country_goals_assists["assist"].shift()
+    country_assisted_goals =  country_goals_assists.loc[((country_goals_assists['goal'] == '1') & (country_goals_assists['assisted goals'] == '1') | (country_goals_assists['assist']=='1'))]
+    country_assisted_goals_pos = country_assisted_goals['positions'].str.split(',', n=2, expand=True)
+    country_assisted_goals_pos = country_assisted_goals['positions'].str.split(':', n=4, expand=True)
+    country_assisted_goals_pos = country_assisted_goals['positions'].str.split(' ', n=4, expand=True)
+    country_assisted_goals_pos.drop(country_assisted_goals_pos.columns[[0,2,4]], axis = 1, inplace = True)
+    country_assisted_goals_pos.rename(columns={country_assisted_goals_pos.columns[0]:'assist y start'}, inplace=True)
+    country_assisted_goals_pos.rename(columns={country_assisted_goals_pos.columns[1]:'assist x start'}, inplace=True)
+    country_assisted_goals_pos['assist y start'] = country_assisted_goals_pos["assist y start"].str.replace(r',',' ',)
+    country_assisted_goals_pos['assist x start'] = country_assisted_goals_pos["assist x start"].str.replace(r',', ' ')
+    country_assisted_goals_pos['assist x start'] = country_assisted_goals_pos["assist x start"].str.replace(r'}', ' ')
+    country_assisted_goals_pos['assist y start'] = country_assisted_goals_pos['assist y start'].astype(int)
+    country_assisted_goals_pos['assist x start'] = country_assisted_goals_pos['assist x start'].astype(int)
+    country_assisted_goals = pd.concat([country_assisted_goals, country_assisted_goals_pos], axis=1)
+    country_assisted_goals['assist y start final'] = country_assisted_goals["assist y start"].shift()
+    country_assisted_goals['assist x start final'] = country_assisted_goals["assist x start"].shift()
+    country_assisted_goals.drop(country_assisted_goals.columns[[4,10,14,15,16]], axis = 1, inplace = True)
+    country_assisted_goals = country_assisted_goals.loc[((country_assisted_goals['goal'] == '1'))]
+    country_shots = pd.read_csv(path2)
+    country_shots_full = pd.merge(country_shots, country_assisted_goals, on='id', how='outer')
+    country_shots_full = country_shots_full.drop(columns = ['Unnamed: 0.1','eventId','assist','subEventName','Unnamed: 0', 'tags_y', 'matchId_y','teamId_y', 'matchPeriod_y','eventSec_y', 'goal_y', 'eventName_y', 'playerId_y'])
+    country_shots_full['assist y start final'] = country_shots_full['assist y start final'].fillna(0)
+    country_shots_full['assist x start final'] = country_shots_full['assist x start final'].fillna(0)
+    country_shots_full = country_shots_full.rename(columns={'tags_x': 'tags', 'playerId_x': 'playerId', 'matchId_x': 'matchId','teamId_x': 'teamId',
+                                 'eventName_x': 'eventName', 'eventSec_x': 'eventSec', 'matchPeriod_x': 'matchPeriod',
+                                 'goal_x': 'goal', 'assist y start final': 'assist y start', 'assist x start final': 'assist x start'})
+    country_shots_full = country_shots_full[['tags','playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','assist y start','assist x start','goal','left foot', 'right foot','head/body']]
+    return country_shots_full
+
+
+
