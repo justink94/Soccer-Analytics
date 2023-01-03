@@ -64,11 +64,11 @@ def assist_pos_func(path):
     country_positions['x start'] = country_positions["x start"].str.replace(r'}', ' ')
     country_positions['y start'] = country_positions['y start'].astype(int)
     country_positions['x start'] = country_positions['x start'].astype(int)
-    country_shots = pd.concat([country_pass, country_positions], axis=1)
-    country_shots = country_shots.drop(['positions', 'subEventId', 'subEventName', 'eventId'], axis = 1)
+    country_assists = pd.concat([country_pass, country_positions], axis=1)
+    country_assists = country_assists.drop(['positions', 'subEventId', 'subEventName', 'eventId'], axis = 1)
     pd.set_option('display.max_colwidth', None)
-    country_shots = country_shots[['tags', 'playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','assist']]
-    return country_shots
+    country_assists = country_assists[['tags', 'playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','assist']]
+    return country_assists
     
 ##Insert path to the csv saved from the goal_pos function
 ##Function to create variables based on what body part was shot with (head/body, left foot, right foot)
