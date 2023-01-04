@@ -137,7 +137,8 @@ plt.xlabel('K')
 plt.ylabel('Error Rate')
 
 ```
-![image](https://user-images.githubusercontent.com/70713627/210662395-c368cfab-34c2-4854-ab6a-82b50dbe87b9.png)
+![image](https://user-images.githubusercontent.com/70713627/210663523-8f9c2fbc-d223-4d65-a516-4378986718ce.png)
+
 
 ## Random Forest 
 
