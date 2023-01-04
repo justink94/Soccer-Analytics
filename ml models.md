@@ -117,7 +117,8 @@ cm = confusion_matrix(y_test, y_pred)
 sns.heatmap(cm,annot=True, fmt = 'g',cmap="GnBu", xticklabels = xlabels, yticklabels = ylabels, cbar=False)
 plt.title("KNN Model Performance on England", fontsize =15)
 ```
-![image](https://user-images.githubusercontent.com/70713627/210662006-39282115-06b2-4958-86ba-f1d6fd23a677.png)
+![image](https://user-images.githubusercontent.com/70713627/210663616-267b86d7-5c7f-4493-9d9b-add842ec097a.png)
+
 
 ## Choosing number of neighbors
 
