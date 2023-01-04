@@ -1,3 +1,4 @@
+# Packages needed
 ```
 import numpy as np
 import pandas as pd
@@ -31,17 +32,16 @@ from sklearn.neighbors import KNeighborsClassifier
 import mlxtend.plotting
 from mlxtend.plotting import plot_decision_regions
 from sklearn.cluster import KMeans
+```
 
-#These models will predict goals based on the data we cleaned and created. Body part, shot position, assist position and time of game
-#Import all 5 countries full_shots csv files
-#Eliminate all outliers of shots that were on the shooting teams side of the field to prevent misrepresentaing data
-#Impute the average assist position for all goals that were unassisted (having 0s in the assist positions)
-
+### These models will predict goals based on the data we cleaned and created. Body part, shot position, assist position and time of game. Import all 5 countries full_shots csv files. Eliminate all outliers of shots that were on the shooting teams side of the field to prevent misrepresentaing data. Impute the average assist position for all goals that were unassisted (having 0s in the assist positions)
+```
 england = england.loc[(england['x start'] >= 50)]
 england['assist x start'] = england['assist x start'].replace({0: 81})
+```
 
-#Choose random country and team from the country to make a train test split for finding goal predictions for specific teams, or use the whole country
-
+### Choose random country and team from the country to make a train test split for finding goal predictions for specific teams, or use the whole country
+```
 X = england[['x start', 'y start','eventSec','assist y start','assist x start', 'left foot','right foot','head/body']]
 y = england['goal']
 liverpool = england.loc[(england['teamId'] == 1612)]
@@ -49,8 +49,10 @@ X_liverpool =liverpool[['x start', 'y start','eventSec', 'assist y start','assis
 y_liverpool = liverpool['goal']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=94)
+```
 
-#Using SMOTE resampling because teh number of shots to goals ratio will create a massively unbalnced data set, so resample to a 2:1 shot to goal ratio
+#### Using SMOTE resampling because teh number of shots to goals ratio will create a massively unbalnced data set, so resample to a 2:1 shot to goal ratio
+```
 smote = SMOTE(sampling_strategy=0.2)
 under_sample = RandomUnderSampler(sampling_strategy=0.5)
 steps = [('smote', smote),('under', under_sample)]
@@ -81,4 +83,25 @@ sns.scatterplot(data= england, x="x start", y="y start", hue="goal")
 plt.title("Training Shots and Goals\n Before Resampling", fontsize =15)
 ```
 ![image](https://user-images.githubusercontent.com/70713627/210659310-8f5f3809-a5fb-4ac8-a5c7-9f395e70c8e9.png)
+
+# Fitting and evaluating ML Models
+
+## Naive Bayes
+```
+nb_clf = GaussianNB()
+nb_clf.fit(X_re, y_re)
+y_pred = nb_clf.predict(X_test)
+cm = confusion_matrix(y_test, y_pred)
+
+f1_score(y_test, y_pred)
+
+xlabels = ['Predicted No Goal', 'Predicted Goal']
+ylabels = ['Actual No Goal', 'Actual Goal']
+
+sns.heatmap(cm,annot=True, fmt = 'g',cmap="GnBu", xticklabels = xlabels, yticklabels = ylabels, cbar=False)
+plt.title("Naive Bayes Model Performance on FC Barcelona\n", fontsize =15)
+```
+
+![image](https://user-images.githubusercontent.com/70713627/210661237-73616f35-4c9c-4d52-9cde-304ff360d633.png)
+
 
