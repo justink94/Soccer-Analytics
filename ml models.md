@@ -1,3 +1,4 @@
+```
 import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
@@ -70,6 +71,14 @@ pyplot.legend()
 plt.title("Training Shots and Goals\n After Resampling", fontsize =15)
 
 pyplot.show()
+```
+![image](https://user-images.githubusercontent.com/70713627/210659221-a0f120da-c830-4d29-95be-2554da474790.png)
 
+
+
+```
 sns.scatterplot(data= england, x="x start", y="y start", hue="goal")
 plt.title("Training Shots and Goals\n Before Resampling", fontsize =15)
+```
+![image](https://user-images.githubusercontent.com/70713627/210659310-8f5f3809-a5fb-4ac8-a5c7-9f395e70c8e9.png)
+
