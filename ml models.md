@@ -111,11 +111,34 @@ knn = KNeighborsClassifier(n_neighbors=15, p = 2, leaf_size = 2)
 knn.fit(X_re, y_re)
 y_pred = knn.predict(X_test)
 
+f1_score(y_test, y_pred)
+
 cm = confusion_matrix(y_test, y_pred)
 sns.heatmap(cm,annot=True, fmt = 'g',cmap="GnBu", xticklabels = xlabels, yticklabels = ylabels, cbar=False)
 plt.title("KNN Model Performance on England", fontsize =15)
 ```
 ![image](https://user-images.githubusercontent.com/70713627/210662006-39282115-06b2-4958-86ba-f1d6fd23a677.png)
+
+## Choosing number of neighbors
+
+```
+error_rate = []
+for i in range(1,40):
+    knn = KNeighborsClassifier(n_neighbors=i)
+    knn.fit(X_re,y_re)
+    pred_i = knn.predict(X_test)
+    error_rate.append(np.mean(pred_i != y_test))
+    
+plt.figure(figsize=(10,6))
+plt.plot(range(1,40),error_rate,color='blue', linestyle='dashed', marker='o',
+ markerfacecolor='red', markersize=10)
+plt.title('Error Rate vs. K Value')
+plt.xlabel('K')
+plt.ylabel('Error Rate')
+
+```
+![image](https://user-images.githubusercontent.com/70713627/210662395-c368cfab-34c2-4854-ab6a-82b50dbe87b9.png)
+
 
 
 
