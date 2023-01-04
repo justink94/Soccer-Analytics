@@ -139,6 +139,37 @@ plt.ylabel('Error Rate')
 ```
 ![image](https://user-images.githubusercontent.com/70713627/210662395-c368cfab-34c2-4854-ab6a-82b50dbe87b9.png)
 
+## Random Forest 
+
+```
+rnd_clf = RandomForestClassifier(n_estimators=500, max_leaf_nodes=15, max_depth = 8, criterion = 'gini', random_state=94)
+rnd_clf.fit(X_re, y_re)
+
+y_pred_rf = rnd_clf.predict(X_test)
+
+f1_score(y_test, y_pred_rf)
+
+cm = confusion_matrix(y_test, y_pred_rf)
+sns.heatmap(cm,annot=True, fmt = 'g',cmap="GnBu", xticklabels = xlabels, yticklabels = ylabels, cbar=False)
+plt.title("Random Forest Model Performance on England", fontsize =15)
+```
+![image](https://user-images.githubusercontent.com/70713627/210662587-ca5aa76d-a3fa-40cb-9eb9-3e18ccb25b47.png)
+
+## Feature Importance from Random Forest 
+
+```
+f_imp = rnd_clf.feature_importances_
+dict = {'Feature':['Shot Distance','Shot Angle','Time of Game','Assist Distance','Assist Angle','Left Foot','Right Foot','Head/Body'],
+       'Importance':[0.13048475, 0.04612654, 0.00889569, 0.34097953, 0.39967551,
+       0.02146678, 0.02001951, 0.03235169]}
+f_impdf= pd.DataFrame(dict)
+ax = sns.barplot(data= f_impdf, x="Feature", y = 'Importance')
+plt.title("Feature Importance of Random Forest", fontsize =15)
+ax.set_xticklabels(ax.get_xticklabels(),rotation = 30)
+```
+![image](https://user-images.githubusercontent.com/70713627/210662789-b4937699-99ae-473e-93b4-e8aadeb8f03c.png)
+
+
 
 
 
