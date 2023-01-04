@@ -185,5 +185,7 @@ for row in italy_hypo['Wins']:
 
 italy_hypo['above average wins'] = above_average
 
+#save to scv using name "country you used_hypo.csv"
+
 
 
