@@ -8,7 +8,7 @@ with jsonpath.open('r', encoding='utf-8') as dat_f:
     dat = json.loads(dat_f.read())
     
 df = pd.json_normalize(dat)
-df.to_csv(' ', encoding='utf-8', index=False) ##insert name for csv
+df.to_csv(' ', encoding='utf-8', index=False) ##insert name for csv such as "england_events.csv"
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -40,8 +40,10 @@ def goal_pos_func(path):
     pd.set_option('display.max_colwidth', None)
     country_shots = country_shots[['tags', 'playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','goal']]
     return country_shots
+    
+#Save to csv using name "country you used_shots.csv"
 
-##Insert path you created for the csv again
+##Insert path you created for the csv in lines 6-11
 ##Function to create frame containing shots, whether they were assisted, and the postion on the assisting passer
 
 def assist_pos_func(path):
@@ -70,6 +72,8 @@ def assist_pos_func(path):
     country_assists = country_assists[['tags', 'playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','assist']]
     return country_assists
     
+#save to csv using name "country you used_assist.csv"
+    
 ##Insert path to the csv saved from the goal_pos function
 ##Function to create variables based on what body part was shot with (head/body, left foot, right foot)
     
@@ -92,10 +96,12 @@ def body_func(path):
     country_shots = pd.concat([country_shots, left], axis=1)
     country_shots = pd.concat([country_shots, head], axis=1)
     return country_shots
+    
+#save to csv using name "country you used_shots_updated"
 
 
-##path 1 should be the path to thecsv created from json you made first
-##path2 should be the path to thecsv created with body_func
+##path1 should be the path to thecsv created from json you made first in lines 6-11
+##path2 should be the path to the csv created with body_func
 ##Function returns frame containing shot position, assist position, whether a goal was scored, and the body part shot with
 
 def full_shots(path1, path2):
@@ -141,6 +147,43 @@ def full_shots(path1, path2):
                                  'goal_x': 'goal', 'assist y start final': 'assist y start', 'assist x start final': 'assist x start'})
     country_shots_full = country_shots_full[['tags','playerId','matchId','teamId','id','eventName','eventSec','matchPeriod','x start','y start','assist y start','assist x start','goal','left foot', 'right foot','head/body']]
     return country_shots_full
+    
+#save to csv using name "country you used_shots_full
+    
+#Function for creating frame with team name, total shots and goals
+#Path1 should be the path to country shots full frame you created with full shots function
+#Path2 should be the path to the teams json file downloaded from wyscout converted to csv using code line 6-11
+
+def hypo_test(path1, path2):
+    country = pd.read_csv(path1)
+    country_teams = country.groupby('teamId').sum()
+    country_teams.drop(['Unnamed: 0','playerId','matchId','id','eventSec','x start','y start','assist y start','assist x start'], axis = 1, inplace = True)
+    country_teams['total shots'] = country_teams[['left foot', 'right foot', 'head/body']].sum(axis=1)
+    country_teams.drop(['right foot', 'left foot', 'head/body'], axis = 1, inplace = True)
+    country_teams = country_teams.reset_index()
+    country_team_names = pd.read_csv(path2)
+    country_teams = pd.merge(country_teams, country_team_names, how='inner', left_on = 'teamId', right_on = 'wyId')
+    country_teams.drop(['city', 'wyId', 'name', 'area.name', 'area.id','area.alpha3code', 'area.alpha2code', 'type'], axis = 1, inplace = True)
+    country_teams = country_teams[['officialName','teamId', 'total shots', 'goal']]
+    return country_teams
+    
+-----------------------------------------------------------------------------------------------------------------
+#once hypo_test function is used on the country of your choosing apend on the corresponding country wins column
+france_hypo.insert(4, "Wins", [23,29,14,22,16,16,15,10,6,9,9,15,10,12,11,12,9,9,13,24], True)
+italy_hypo.insert(4, "Wins", [18,23,30,20,21,12,16,10,11,16,11,16,13,28,11,7,9,8,6,11], True)
+england_teams.insert(4, "Wins", [19,21,25,21,12,7,13,23,32,6,11,12,10,7,11,14,9,11,9,8], True)
+germany_hypo.insert(4, "Wins", [10,27,15,15,15,18,8,6,8,13,10,10,9,14,5,10,15,15], True)
+spain_hypo.insert(4, "Wins", [22,22,28,6,10,23,17,18,5,18,14,12,13,11,15,15,14,12,5,14], True)
+-----------------------------------------------------------------------------------------------------------------
+#Gives binary indicator of whether team had an above average number of wins in their respective leagues change _hypo to name of frame you created with hypo_test funtion
+#appended with wins above
+
+above_average= []
+for row in italy_hypo['Wins']:
+    if row > italy_hypo['Wins'].mean() : above_average.append(1)
+    else: above_average.append(0)
+
+italy_hypo['above average wins'] = above_average
 
 
 
