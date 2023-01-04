@@ -40,7 +40,7 @@ england = england.loc[(england['x start'] >= 50)]
 england['assist x start'] = england['assist x start'].replace({0: 81})
 ```
 
-### Choose random country and team from the country to make a train test split for finding goal predictions for specific teams, or use the whole country
+### Choose random country and team from the country to make a train test split for finding goal predictions for specific teams, or use the whole country. In these models I will be using the entire country of England
 ```
 X = england[['x start', 'y start','eventSec','assist y start','assist x start', 'left foot','right foot','head/body']]
 y = england['goal']
@@ -99,9 +99,23 @@ xlabels = ['Predicted No Goal', 'Predicted Goal']
 ylabels = ['Actual No Goal', 'Actual Goal']
 
 sns.heatmap(cm,annot=True, fmt = 'g',cmap="GnBu", xticklabels = xlabels, yticklabels = ylabels, cbar=False)
-plt.title("Naive Bayes Model Performance on FC Barcelona\n", fontsize =15)
+plt.title("Naive Bayes Model Performance on England", fontsize =15)
 ```
 
 ![image](https://user-images.githubusercontent.com/70713627/210661237-73616f35-4c9c-4d52-9cde-304ff360d633.png)
+
+## K Nearest Neighbors
+
+```
+knn = KNeighborsClassifier(n_neighbors=15, p = 2, leaf_size = 2)
+knn.fit(X_re, y_re)
+y_pred = knn.predict(X_test)
+
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm,annot=True, fmt = 'g',cmap="GnBu", xticklabels = xlabels, yticklabels = ylabels, cbar=False)
+plt.title("KNN Model Performance on England", fontsize =15)
+```
+![image](https://user-images.githubusercontent.com/70713627/210662006-39282115-06b2-4958-86ba-f1d6fd23a677.png)
+
 
 
