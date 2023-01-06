@@ -73,7 +73,7 @@ events_england %>%
 ![image](https://user-images.githubusercontent.com/70713627/210665825-d3454edc-1e35-4697-9b5d-85ac726a1b22.png)
 
 
-# Comparing winning teams and losing teams by using assist and shot maps to discover useful strategies. Using FC Barcelona and Juventus as the winners, and FC Metz and, West Bromwich FC as the losers.
+# Comparing winning teams and losing teams by using assist and shot maps to discover useful strategies. Using FC Barcelona and Juventus as the winners, and FC Metz and West Bromwich FC as the losers.
 
 ## Shots
 
