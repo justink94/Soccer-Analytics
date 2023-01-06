@@ -73,7 +73,7 @@ events_england %>%
 ![image](https://user-images.githubusercontent.com/70713627/210665825-d3454edc-1e35-4697-9b5d-85ac726a1b22.png)
 
 
-# Comparing winning teams and losing teams by using assist and shot maps to discover useful strategies. Using FC Barcelona, Juventus, FC Metz and, West Bromwich FC
+# Comparing winning teams and losing teams by using assist and shot maps to discover useful strategies. Using FC Barcelona and Juventus as the winners, and FC Metz and, West Bromwich FC as the losers.
 
 ## Shots
 
@@ -114,7 +114,7 @@ annotate_pitch(dimensions = pitch_wyscout, fill = "springgreen4", colour = "whit
 
 ![image](https://user-images.githubusercontent.com/70713627/210668271-aeb05041-b9a5-406b-81b5-61b9c9d6bf75.png)
 
-### Using the comparison between Juventus and FC Metz and their respectiev shot maps, we can see that there may be an advantage to taking longer chances and chances from wider angles to possibly take goal keepers and defenders off guard, rather than shooting from the best possible angle which is straight ahead
+### Using the comparison between Juventus and FC Metz and their respective shot maps, we can see that there may be an advantage to taking longer chances and chances from wider angles to possibly take goal keepers and defenders off guard, rather than shooting from the best possible angle which is straight ahead
 
 ## Assists
 
