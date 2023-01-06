@@ -196,6 +196,6 @@ annotate_pitch(dimensions = pitch_wyscout, fill = "springgreen4", colour = "whit
 
 ![image](https://user-images.githubusercontent.com/70713627/211110514-4cb3e82f-a3a7-4e7b-b939-fd95e5ca8077.png)
 
-### Lastly from the goal maps, we can see that Juventus was taking much wider angles and scoring from those angles as well. FC Metz on the other hand had a very narrow shot map and only reall scored from the 6 yardline and nowhere else. This shows that teams need to shoot from amny different places instead of trying to get as close as possible for the easiste shot. 
+### Lastly from the goal maps, we can see that Juventus was taking much wider angles and scoring from those angles as well. FC Metz on the other hand had a very narrow shot map and only reall scored from the 6 yardline and nowhere else. This shows that teams need to shoot from amny different places instead of trying to get as close as possible for the easiest shot. 
 
 
