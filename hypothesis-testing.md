@@ -60,4 +60,4 @@ ggplot(data = all_teams, aes(x = all_teams$`above average`, y = all_teams$Wins, 
 
 ![image](https://user-images.githubusercontent.com/70713627/211112661-74dd86b2-46d1-4014-a7b9-f4876b791418.png)
 
-
+### We can see from this box plot, that we have a difference in wins between teams that shot below the average and shot above that average. The t test that we did proves that this difference is significant and proves that shooting more is a factor in winning more.
