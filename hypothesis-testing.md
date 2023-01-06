@@ -29,9 +29,35 @@ shot_below = all_teams %>%
 shapiro.test(shot_above$Wins)
 ```
 
-### With an $\alpha$ of 0.05 and a p-value of 4.392e-05, we reject the null hypothesis of teams that shoot more than average to not win more than average. 
+### With an $\alpha$ of 0.05 and a p-value of 4.392e-05, we reject the null hypothesis of teams that shoot more than average do not win more than average. 
 
 ```{r}
 t.test(shot_above$Wins, mu = 14.07, type = 'one tailed')
 ```
+
+```{r}
+ggplot(data = all_teams, aes(x = all_teams$`above average`, y = all_teams$Wins, fill = all_teams$`above average`))+
+  geom_boxplot(lwd=0.7)+
+  labs(title = 'Distributions of Wins for \nEuropean Club Teams', subtitle = 'By team shot totals', x = 'Total Shots Above Average', y = 'Number of Wins')+
+  scale_x_discrete(labels = c('No', 'Yes'))+
+  theme(plot.title= element_text(size=18,
+                                   color="black",
+                                   face="bold",
+                                   family = "Tahoma"),
+        plot.subtitle = element_text(size=10,
+                                   color="black",
+                                   face="bold",
+                                   family = "Tahoma"),
+        axis.text.x = element_text(family = 'Tahoma', face = 'bold'),
+        axis.text.y = element_text(family = 'Tahoma', face = 'bold'),
+        axis.title.x = element_text(face = 'bold', size = 12),
+        axis.title.y = element_text(face = 'bold', size = 12),
+        panel.background = element_rect(fill='grey'),
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_line(colour = "white", size = (0.3)), legend.position="none",
+        panel.border = element_rect(colour = "black", fill=NA, size=1))
+```
+
+![image](https://user-images.githubusercontent.com/70713627/211112661-74dd86b2-46d1-4014-a7b9-f4876b791418.png)
+
 
