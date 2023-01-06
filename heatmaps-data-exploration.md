@@ -154,4 +154,6 @@ annotate_pitch(dimensions = pitch_wyscout, fill = "springgreen4", colour = "whit
 ```
 ![image](https://user-images.githubusercontent.com/70713627/210668623-96d613b1-ac61-4217-a4d3-7be24b2ed356.png)
 
-### Using the assists comparison, we can see an established strategy from Barcelona on where the key passes are made that lead to goals. Down the wings 
+### Using the assists comparison, we can see an established strategy from Barcelona on where the key passes are made that lead to goals. Down the wings and the occaisonal thru ball in the middle. West Brom on the other hand has no distinct strategy that we can determine from their assist locations.
+
+
